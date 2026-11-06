@@ -37,7 +37,9 @@ sys.path.insert(0, BASE_DIR)
 from src.train_and_compare_models import DomainFeatureEngineer, build_preprocessor, get_models  # noqa: E402
 from sklearn.pipeline import Pipeline  # noqa: E402
 
-DATA_PATH = os.path.join(BASE_DIR, "data", "student_burnout_dropout_dataset_2.csv")
+EXPANDED_PATH = os.path.join(BASE_DIR, "data", "student_burnout_dropout_expanded.csv")
+ORIG_PATH = os.path.join(BASE_DIR, "data", "student_burnout_dropout_dataset_2.csv")
+DATA_PATH = EXPANDED_PATH if os.path.exists(EXPANDED_PATH) else ORIG_PATH
 METRICS_PATH = os.path.join(BASE_DIR, "reports", "model_comparison_metrics.csv")
 FIG_VI = os.path.join(BASE_DIR, "figures_vi")
 FIG_EN = os.path.join(BASE_DIR, "figures_en")
@@ -49,10 +51,11 @@ def generate_eda_figures(df, lang="vi"):
     out_dir = FIG_VI if lang == "vi" else FIG_EN
     is_vi = lang == "vi"
 
-    # 01. Missing values
-    missing = df.drop(columns=["Dropout_Binary", "Burnout_Numeric"]).isnull().sum()
+    # 01. Missing values (from original raw dataset before cleaning)
+    df_miss = pd.read_csv(ORIG_PATH) if os.path.exists(ORIG_PATH) else df.drop(columns=["Dropout_Binary", "Burnout_Numeric"])
+    missing = df_miss.isnull().sum()
     missing = missing[missing > 0].sort_values(ascending=True)
-    missing_pct = (missing / len(df)) * 100
+    missing_pct = (missing / len(df_miss)) * 100
 
     fig, ax = plt.subplots(figsize=(10, 6.5))
     colors = sns.color_palette("YlOrRd", len(missing))
@@ -95,7 +98,7 @@ def generate_eda_figures(df, lang="vi"):
     for b in bars1:
         h = b.get_height()
         axes[0].text(b.get_x() + b.get_width() / 2, h + 8, f"{h} ({h/len(df)*100:.1f}%)", ha="center", fontweight="bold", fontsize=10.5)
-    axes[0].set_ylim(0, 520)
+    axes[0].set_ylim(0, max(counts_drop.values) * 1.18)
     axes[0].set_title("Phân phối Nguy cơ Bỏ học\n(Dropout_Risk)" if is_vi else "Dropout Risk Distribution\n(Target Variable)", fontsize=12, fontweight="bold")
     axes[0].set_ylabel("Số lượng sinh viên" if is_vi else "Number of Students", fontweight="bold")
 
@@ -106,7 +109,7 @@ def generate_eda_figures(df, lang="vi"):
     for b in bars2:
         h = b.get_height()
         axes[1].text(b.get_x() + b.get_width() / 2, h + 6, f"{h} ({h/len(df)*100:.1f}%)", ha="center", fontweight="bold", fontsize=10.5)
-    axes[1].set_ylim(0, 380)
+    axes[1].set_ylim(0, max(counts_burn.values) * 1.18)
     axes[1].set_title("Phân phối Mức độ Kiệt sức\n(Burnout_Level)" if is_vi else "Burnout Level Distribution\n(Low / Medium / High)", fontsize=12, fontweight="bold")
     axes[1].set_ylabel("Số lượng sinh viên" if is_vi else "Number of Students", fontweight="bold")
 
@@ -301,10 +304,10 @@ def generate_model_figures(df, metrics_df, lang="vi"):
         axes[0].text(row["CV_F1_Mean"] * 100 + 0.5, i, f"{row['CV_F1_Mean']*100:.1f}%", va="center", fontsize=8.5, fontweight="bold")
     axes[0].set_yticks(y_pos)
     axes[0].set_yticklabels(df_plot["Model"], fontweight="bold")
-    axes[0].set_xlim(50, 90)
+    axes[0].set_xlim(50, 98)
     axes[0].set_xlabel("Điểm đánh giá 5-Fold CV (%)" if is_vi else "5-Fold Cross-Validation Score (%)", fontweight="bold")
     axes[0].set_title(
-        "So sánh 10 Mô hình Học máy (Kịch bản 1: Đầy đủ đặc trưng)" if is_vi else "10 ML Models Comparison (Scenario 1: Full Features)",
+        "So sánh 4 Mô hình Học máy Tiêu biểu (Kịch bản 1: Đầy đủ đặc trưng)" if is_vi else "4 Flagship ML Models Comparison (Scenario 1: Full Features)",
         fontsize=12, fontweight="bold",
     )
     axes[0].legend(loc="lower right")
@@ -334,7 +337,7 @@ def generate_model_figures(df, metrics_df, lang="vi"):
         axes[1].text(w + 0.4, bar.get_y() + bar.get_height() / 2, f"{w:.1f}%", va="center", fontsize=8, color="#444")
     axes[1].set_yticks(y_pos2)
     axes[1].set_yticklabels(merged["Model"], fontweight="bold")
-    axes[1].set_xlim(55, 90)
+    axes[1].set_xlim(55, 98)
     axes[1].set_xlabel("Điểm ROC-AUC trung bình 5-Fold CV (%)" if is_vi else "Mean 5-Fold CV ROC-AUC (%)", fontweight="bold")
     axes[1].set_title(
         "Đánh giá Vai trò của Biến trung gian Burnout_Level" if is_vi else "Impact of Intermediate Variable Burnout_Level (ROC-AUC)",
@@ -342,9 +345,9 @@ def generate_model_figures(df, metrics_df, lang="vi"):
     )
     axes[1].legend(loc="lower right", fontsize=9)
     plt.suptitle(
-        "Kết quả Thực nghiệm & So sánh Hiệu năng 10 Mô hình Dự đoán Bỏ học"
+        "Kết quả Thực nghiệm & So sánh Hiệu năng 4 Mô hình Dự đoán Bỏ học"
         if is_vi
-        else "Experimental Results & Performance Comparison Across 10 Machine Learning Models",
+        else "Experimental Results & Performance Comparison Across 4 Flagship ML Models",
         fontsize=14, fontweight="bold", y=1.02,
     )
     plt.tight_layout()
@@ -410,10 +413,11 @@ def generate_model_figures(df, metrics_df, lang="vi"):
         acc = accuracy_score(y_t, y_p)
         f1 = f1_score(y_t, y_p)
         ax.set_title(f"{name}\nAcc: {acc*100:.1f}% | F1: {f1*100:.1f}%", fontsize=11, fontweight="bold")
+    n_test = len(y_test)
     plt.suptitle(
-        "Ma trận Nhầm lẫn (Confusion Matrix) của 4 Mô hình Tiêu biểu trên Tập Kiểm thử (n=160)"
+        f"Ma trận Nhầm lẫn (Confusion Matrix) của 4 Mô hình Tiêu biểu trên Tập Kiểm thử (n={n_test})"
         if is_vi
-        else "Confusion Matrices of Top 4 Representative Models on Hold-Out Test Set (n=160)",
+        else f"Confusion Matrices of Top 4 Representative Models on Hold-Out Test Set (n={n_test})",
         fontsize=13.5, fontweight="bold", y=1.05,
     )
     plt.tight_layout()
@@ -462,20 +466,20 @@ def generate_architecture_diagrams(lang="vi"):
 
     if is_vi:
         steps = [
-            ("1. Thu thập Dữ liệu", "800 Sinh viên x 25 thuộc tính\nNhân khẩu học, Học tập,\nLối sống & Tâm lý", "#264653"),
-            ("2. Tiền xử lý & EDA", "Xử lý 18 cột khuyết (KNNImputer)\nMã hóa One-Hot / Ordinal\nChuẩn hóa StandardScaler", "#2a9d8f"),
+            ("1. Thu thập & Mở rộng", "2,000 Sinh viên x 25 thuộc tính\nNhân khẩu học, Học tập,\nLối sống & Tâm lý", "#264653"),
+            ("2. Làm sạch 6 Bước", "KNNImputer + Lọc ngoại lai IQR\nMã hóa One-Hot / Ordinal\nChuẩn hóa StandardScaler", "#2a9d8f"),
             ("3. Tạo Đặc trưng Mới", "Academic Engagement Index\nPsychological Stress Index\nStress-Engagement Ratio", "#457b9d"),
-            ("4. Huấn luyện Mô hình", "So sánh 10 thuật toán ML\nKiểm định chéo 5-Fold CV\nTrên 2 kịch bản thực nghiệm", "#e76f51"),
-            ("5. Đánh giá & Web UI", "ROC-AUC ~80.5% | F1 ~78.9%\nHệ thống Cảnh báo Sớm\nFastAPI Web Dashboard", "#e63946"),
+            ("4. Huấn luyện Mô hình", "So sánh 4 mô hình tiêu biểu:\nLR, RF, XGBoost, Soft Voting\nKiểm định chéo 5-Fold CV", "#e76f51"),
+            ("5. Đánh giá & Web UI", "ROC-AUC ~89.0% | F1 ~83.6%\nHệ thống Cảnh báo Sớm\nFastAPI Web Dashboard", "#e63946"),
         ]
         wf_title = "QUY TRÌNH THỰC HIỆN DỰ ÁN HỌC MÁY (NHÓM 03: ĐỖ QUANG MINH, VŨ QUANG HUY)"
     else:
         steps = [
-            ("1. Data Acquisition", "800 Students x 25 Attributes\nDemographics, Engagement,\nLifestyle & Stress Metrics", "#264653"),
-            ("2. Preprocessing & EDA", "Impute 18 Missing Cols (KNN)\nOne-Hot & Ordinal Encoding\nStandardScaler Normalization", "#2a9d8f"),
+            ("1. Data Acquisition", "2,000 Students x 25 Attributes\nDemographics, Engagement,\nLifestyle & Stress Metrics", "#264653"),
+            ("2. 6-Step Cleaning", "KNNImputer + IQR Outlier Clip\nOne-Hot & Ordinal Encoding\nStandardScaler Normalization", "#2a9d8f"),
             ("3. Feature Engineering", "Academic Engagement Index\nPsychological Stress Index\nStress-to-Engagement Ratio", "#457b9d"),
-            ("4. Model Training", "Compare 10 ML Classifiers\n5-Fold Stratified CV\nAcross 2 Experimental Scenarios", "#e76f51"),
-            ("5. Evaluation & Web UI", "ROC-AUC ~80.5% | F1 ~78.9%\nEarly Warning System\nFastAPI Web Dashboard", "#e63946"),
+            ("4. Model Training", "Compare 4 Flagship Models:\nLR, RF, XGBoost, Soft Voting\n5-Fold Stratified CV", "#e76f51"),
+            ("5. Evaluation & Web UI", "ROC-AUC ~89.0% | F1 ~83.6%\nEarly Warning System\nFastAPI Web Dashboard", "#e63946"),
         ]
         wf_title = "MACHINE LEARNING PROJECT WORKFLOW (GROUP 03: DO QUANG MINH, VU QUANG HUY)"
 

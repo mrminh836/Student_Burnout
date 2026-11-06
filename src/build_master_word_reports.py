@@ -445,17 +445,17 @@ def generate_master_final_report(lang="vi"):
     set_table_borders(tbl_kpi)
     kpis = (
         [
-            ("800 Sinh viên", "Quy mô mẫu khảo sát"),
-            ("25 Thuộc tính", "18 cột xử lý KNNImputer"),
-            ("10 Mô hình ML", "Đối sánh trên 2 kịch bản"),
-            ("80.50% AUC", "Hiệu năng dự báo đỉnh"),
+            ("2,000 Sinh viên", "800 gốc + 1,200 mở rộng sạch"),
+            ("25 → 34 Cột", "Làm sạch 6 bước + 6 chỉ số mới"),
+            ("4 Mô hình ML", "LR, RF, XGBoost, Soft Voting"),
+            ("89.01% AUC", "Hiệu năng dự báo đỉnh (RF)"),
         ]
         if is_vi
         else [
-            ("800 Students", "Empirical Sample Size"),
-            ("25 Attributes", "18 KNN-Imputed Columns"),
-            ("10 ML Models", "Benchmarked in 2 Scenarios"),
-            ("80.50% AUC", "Peak Predictive ROC-AUC"),
+            ("2,000 Students", "800 Original + 1,200 Expanded"),
+            ("25 → 34 Cols", "6-Step Cleaned + 6 New Indices"),
+            ("4 ML Models", "LR, RF, XGBoost, Soft Voting"),
+            ("89.01% AUC", "Peak Predictive ROC-AUC (RF)"),
         ]
     )
     for idx, (big_v, sub_v) in enumerate(kpis):
@@ -929,47 +929,35 @@ def generate_master_final_report(lang="vi"):
         width_inches=6.0,
     )
 
-    add_h2(doc, "3.3. Kết quả Huấn luyện và So sánh 10 Mô hình Học máy" if is_vi else "3.3. Training Results and 10-Model Benchmarking")
+    add_h2(doc, "3.3. Kết quả Huấn luyện và So sánh 4 Mô hình Học máy Tiêu biểu" if is_vi else "3.3. Training Results and 4-Model Benchmarking")
     doc.add_paragraph(
-        "Nhóm tiến hành huấn luyện, kiểm định chéo 5-Fold và đánh giá trên tập Test độc lập (160 mẫu) đối với 10 mô hình học máy trên cả 2 kịch bản. Kết quả chi tiết được tổng hợp tại Bảng 3.2 (Kịch bản 1: Đầy đủ đặc trưng) và Bảng 3.3 (Kịch bản 2: Cảnh báo sớm không dùng biến Burnout_Level):"
+        "Nhóm tiến hành huấn luyện, kiểm định chéo 5-Fold và đánh giá trên tập Test độc lập (400 mẫu - 20% của 2,000 sinh viên) đối với 4 mô hình học máy tiêu biểu (Logistic Regression, Random Forest, XGBoost, Soft Voting Ensemble) trên cả 2 kịch bản. Kết quả chi tiết được tổng hợp tại Bảng 3.2 (Kịch bản 1: Đầy đủ đặc trưng) và Bảng 3.3 (Kịch bản 2: Cảnh báo sớm không dùng biến Burnout_Level):"
         if is_vi
-        else "We trained, cross-validated (5-Fold Stratified CV), and evaluated all 10 machine learning classifiers on the 20% hold-out test set (n=160) across both scenarios. Detailed quantitative metrics are presented in Table 3.2 (Scenario 1: Full Feature Set) and Table 3.3 (Scenario 2: Early Warning without Burnout_Level):"
+        else "We trained, cross-validated (5-Fold Stratified CV), and evaluated all 4 flagship machine learning classifiers on the 20% hold-out test set (n=400 out of 2,000 students) across both scenarios. Detailed quantitative metrics are presented in Table 3.2 (Scenario 1: Full Feature Set) and Table 3.3 (Scenario 2: Early Warning without Burnout_Level):"
     )
 
     s1_rows = [
-        ["1. Random Forest", "74.38% ± 4.87%", "74.90%", "80.31%", "77.46%", "80.50%", "71.88%", "75.14%", "80.24%"],
-        ["2. Soft Voting Ensemble", "73.88% ± 4.68%", "74.84%", "78.94%", "76.79%", "79.95%", "72.50%", "75.82%", "79.37%"],
-        ["3. Logistic Regression", "72.25% ± 4.27%", "73.72%", "76.87%", "75.19%", "79.82%", "73.75%", "76.14%", "79.86%"],
-        ["4. MLP Neural Network", "73.63% ± 3.70%", "75.57%", "76.42%", "75.94%", "79.68%", "70.63%", "72.83%", "77.75%"],
-        ["5. XGBoost", "71.75% ± 3.48%", "73.93%", "74.81%", "74.28%", "79.25%", "71.25%", "73.86%", "77.77%"],
-        ["6. Extra Trees", "75.00% ± 4.81%", "75.27%", "81.23%", "78.10%", "79.22%", "75.63%", "78.92%", "78.81%"],
-        ["7. Gradient Boosting", "71.75% ± 4.23%", "73.78%", "75.27%", "74.44%", "79.08%", "73.13%", "75.14%", "78.52%"],
-        ["8. SVM (RBF Kernel)", "74.63% ± 5.50%", "75.25%", "80.08%", "77.57%", "78.55%", "74.38%", "77.84%", "79.15%"],
-        ["9. K-Nearest Neighbors", "70.25% ± 4.04%", "72.87%", "72.54%", "72.59%", "77.14%", "71.88%", "74.86%", "76.37%"],
-        ["10. Decision Tree", "66.88% ± 3.60%", "72.24%", "64.50%", "67.75%", "73.88%", "68.75%", "71.59%", "73.82%"],
+        ["1. Random Forest", "80.25% ± 2.15%", "79.88%", "86.38%", "82.98%", "89.01%", "81.50%", "83.63%", "88.42%"],
+        ["2. Soft Voting Ensemble", "79.70% ± 2.14%", "79.96%", "84.74%", "82.27%", "88.89%", "80.25%", "82.17%", "88.32%"],
+        ["3. XGBoost", "79.95% ± 2.28%", "80.39%", "84.56%", "82.39%", "88.64%", "78.50%", "80.28%", "87.99%"],
+        ["4. Logistic Regression", "78.45% ± 2.09%", "79.68%", "81.64%", "80.62%", "87.61%", "78.25%", "80.18%", "87.60%"],
     ]
     add_styled_table(
         doc,
-        "Bảng 3.2: Kết quả Thực nghiệm 10 Mô hình Học máy — Kịch bản 1 (Đầy đủ Đặc trưng, Có Burnout_Level)" if is_vi else "Table 3.2: 10-Model Experimental Results — Scenario 1 (Full Feature Set Including Burnout_Level)",
+        "Bảng 3.2: Kết quả Thực nghiệm 4 Mô hình Học máy Tiêu biểu — Kịch bản 1 (Đầy đủ Đặc trưng, Có Burnout_Level)" if is_vi else "Table 3.2: 4-Model Experimental Results — Scenario 1 (Full Feature Set Including Burnout_Level)",
         ["Mô hình (Model)" if is_vi else "Classifier", "CV Accuracy", "CV Prec", "CV Recall", "CV F1", "CV AUC", "Test Acc", "Test F1", "Test AUC"],
         s1_rows,
     )
 
     s2_rows = [
-        ["1. Soft Voting Ensemble", "70.63% ± 4.18%", "71.89%", "76.19%", "73.89%", "77.10%", "70.63%", "73.14%", "77.63%"],
-        ["2. Logistic Regression", "68.75% ± 4.52%", "70.46%", "73.67%", "71.97%", "76.82%", "68.13%", "70.52%", "79.00%"],
-        ["3. XGBoost", "68.50% ± 3.55%", "70.90%", "72.08%", "71.40%", "76.45%", "70.00%", "72.41%", "75.88%"],
-        ["4. Extra Trees", "68.38% ± 4.50%", "68.30%", "78.70%", "73.09%", "76.19%", "66.88%", "71.96%", "77.18%"],
-        ["5. Random Forest", "68.75% ± 3.28%", "70.75%", "73.00%", "71.74%", "76.14%", "70.00%", "72.41%", "76.78%"],
-        ["6. SVM (RBF Kernel)", "68.25% ± 4.36%", "69.74%", "74.36%", "71.81%", "76.13%", "69.38%", "72.32%", "77.77%"],
-        ["7. Gradient Boosting", "68.50% ± 3.44%", "70.69%", "72.30%", "71.42%", "75.68%", "66.88%", "69.71%", "75.39%"],
-        ["8. MLP Neural Network", "67.50% ± 5.00%", "69.88%", "71.84%", "70.66%", "75.02%", "70.00%", "72.41%", "78.52%"],
-        ["9. K-Nearest Neighbors", "66.13% ± 3.82%", "68.80%", "69.80%", "69.27%", "71.99%", "66.88%", "71.04%", "73.15%"],
-        ["10. Decision Tree", "60.88% ± 4.23%", "64.02%", "64.76%", "64.10%", "67.12%", "63.75%", "60.81%", "68.56%"],
+        ["1. XGBoost", "79.95% ± 2.34%", "80.22%", "84.74%", "82.40%", "88.26%", "78.00%", "79.82%", "87.24%"],
+        ["2. Soft Voting Ensemble", "79.30% ± 2.33%", "79.64%", "84.01%", "81.77%", "88.25%", "78.00%", "80.00%", "87.39%"],
+        ["3. Random Forest", "79.30% ± 2.25%", "79.05%", "85.20%", "82.00%", "87.97%", "78.50%", "80.72%", "87.13%"],
+        ["4. Logistic Regression", "78.00% ± 2.41%", "79.22%", "81.36%", "80.27%", "87.25%", "77.75%", "79.73%", "87.00%"],
     ]
     add_styled_table(
         doc,
-        "Bảng 3.3: Kết quả Thực nghiệm 10 Mô hình Học máy — Kịch bản 2 (Cảnh báo Sớm, Không dùng Burnout_Level)" if is_vi else "Table 3.3: 10-Model Experimental Results — Scenario 2 (Early Warning Without Burnout_Level)",
+        "Bảng 3.3: Kết quả Thực nghiệm 4 Mô hình Học máy Tiêu biểu — Kịch bản 2 (Cảnh báo Sớm, Không dùng Burnout_Level)" if is_vi else "Table 3.3: 4-Model Experimental Results — Scenario 2 (Early Warning Without Burnout_Level)",
         ["Mô hình (Model)" if is_vi else "Classifier", "CV Accuracy", "CV Prec", "CV Recall", "CV F1", "CV AUC", "Test Acc", "Test F1", "Test AUC"],
         s2_rows,
     )

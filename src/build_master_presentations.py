@@ -196,17 +196,17 @@ def build_deck(lang="vi"):
 
     cover_kpis = (
         [
-            ("800", "Hồ sơ Sinh viên Khảo sát", C_TEAL),
-            ("25 → 31", "Thuộc tính & Chỉ số Mới", C_BLUE),
-            ("10 Mô hình", "Đối sánh trên 2 Kịch bản", C_AMBER),
-            ("80.50%", "Đỉnh ROC-AUC (5-Fold CV)", C_CORAL),
+            ("2,000", "Hồ sơ Sinh viên (Sạch 100%)", C_TEAL),
+            ("25 → 34", "Thuộc tính & 6 Chỉ số Mới", C_BLUE),
+            ("4 Mô hình", "LR, RF, XGBoost, Soft Voting", C_AMBER),
+            ("89.01%", "Đỉnh ROC-AUC (5-Fold CV)", C_CORAL),
         ]
         if is_vi
         else [
-            ("800", "Student Profiles Analyzed", C_TEAL),
-            ("25 → 31", "Raw & Engineered Features", C_BLUE),
-            ("10 Models", "Benchmarked in 2 Scenarios", C_AMBER),
-            ("80.50%", "Peak 5-Fold CV ROC-AUC", C_CORAL),
+            ("2,000", "Cleaned Student Profiles", C_TEAL),
+            ("25 → 34", "Raw & Engineered Features", C_BLUE),
+            ("4 Models", "LR, RF, XGBoost, Soft Voting", C_AMBER),
+            ("89.01%", "Peak 5-Fold CV ROC-AUC", C_CORAL),
         ]
     )
     for idx, (val, lbl, col) in enumerate(cover_kpis):
@@ -672,16 +672,10 @@ def build_deck(lang="vi"):
             "KB1: Test AUC" if is_vi else "S1: Test AUC",
             "KB2: CV AUC (Sớm)" if is_vi else "S2: Early CV AUC",
         ],
-        ["1. Random Forest ★", "74.38%", "80.31%", "77.46%", "80.50%", "71.88%", "75.14%", "80.24%", "76.14%"],
-        ["2. Extra Trees ★", "75.00%", "81.23%", "78.10%", "79.22%", "75.63%", "78.92%", "78.81%", "76.19%"],
-        ["3. Soft Voting Ensemble ★", "73.88%", "78.94%", "76.79%", "79.95%", "72.50%", "75.82%", "79.37%", "77.10%"],
-        ["4. Logistic Regression", "72.25%", "76.87%", "75.19%", "79.82%", "73.75%", "76.14%", "79.86%", "76.82%"],
-        ["5. SVM (RBF Kernel)", "74.63%", "80.08%", "77.57%", "78.55%", "74.38%", "77.84%", "79.15%", "76.13%"],
-        ["6. MLP Neural Network", "73.63%", "76.42%", "75.94%", "79.68%", "70.63%", "72.83%", "77.75%", "75.02%"],
-        ["7. XGBoost", "71.75%", "74.81%", "74.28%", "79.25%", "71.25%", "73.86%", "77.77%", "76.45%"],
-        ["8. Gradient Boosting", "71.75%", "75.27%", "74.44%", "79.08%", "73.13%", "75.14%", "78.52%", "75.68%"],
-        ["9. K-Nearest Neighbors", "70.25%", "72.54%", "72.59%", "77.14%", "71.88%", "74.86%", "76.37%", "71.99%"],
-        ["10. Decision Tree", "66.88%", "64.50%", "67.75%", "73.88%", "68.75%", "71.59%", "73.82%", "67.12%"],
+        ["1. Random Forest ★", "80.25%", "86.38%", "82.98%", "89.01%", "81.50%", "83.63%", "88.42%", "87.97%"],
+        ["2. Soft Voting Ensemble ★", "79.70%", "84.74%", "82.27%", "88.89%", "80.25%", "82.17%", "88.32%", "88.25%"],
+        ["3. XGBoost ★", "79.95%", "84.56%", "82.39%", "88.64%", "78.50%", "80.28%", "87.99%", "88.26%"],
+        ["4. Logistic Regression", "78.45%", "81.64%", "80.62%", "87.61%", "78.25%", "80.18%", "87.60%", "87.25%"],
     ]
     t_shp = s11.shapes.add_table(len(table_data), len(table_data[0]), Inches(0.40), Inches(1.42), Inches(12.53), Inches(5.35))
     tbl = t_shp.table
