@@ -222,26 +222,26 @@ def build_deck(lang="vi"):
         prs, 2, total_slides,
         "00 NỘI DUNG TRÌNH BÀY" if is_vi else "00 PRESENTATION AGENDA",
         "Cấu trúc Bài Thuyết trình Bảo vệ Đồ án" if is_vi else "Presentation Agenda & Executive Structure",
-        "Hành trình khép kín từ Đặt vấn đề, Khám phá dữ liệu, Kỹ thuật Đặc trưng, Huấn luyện 10 Mô hình đến Ứng dụng Web Thực tế"
-        if is_vi else "A structured walkthrough from problem formulation and statistical EDA to 10-model benchmarking and live Web UI deployment",
+        "Hành trình khép kín từ Đặt vấn đề, Làm sạch 6 bước, Kỹ thuật Đặc trưng, Huấn luyện 4 Mô hình đến Ứng dụng Web Thực tế"
+        if is_vi else "A structured walkthrough from problem formulation and 6-step cleaning to 4-model benchmarking and live Web UI deployment",
         lang=lang,
     )
     agenda_cards = (
         [
             ("01. GIỚI THIỆU & BỐI CẢNH", ["• Thực trạng bỏ học đại học & kiệt sức học đường.", "• Mục tiêu nghiên cứu & tính cấp thiết của Cảnh báo sớm.", "• Phân công nhiệm vụ Nhóm 03 & Lộ trình 4 giai đoạn."], C_NAVY),
-            ("02. DỮ LIỆU & TIỀN XỬ LÝ", ["• Khảo sát 800 sinh viên × 25 thuộc tính (5 nhóm chức năng).", "• Phân tích 18 cột khuyết dữ liệu (1.6% – 6.4%).", "• Quy trình điền khuyết đa biến KNNImputer (k=7) chống rò rỉ."], C_BLUE),
+            ("02. DỮ LIỆU & LÀM SẠCH 6 BƯỚC", ["• Từ 800 SV gốc mở rộng lên 2,000 SV × 25 thuộc tính.", "• Xử lý 18 cột khuyết bằng KNNImputer (k=7) + lọc IQR.", "• Chuẩn hóa 100% dữ liệu sạch (0 giá trị NaN)."], C_BLUE),
             ("03. KỸ THUẬT TẠO ĐẶC TRƯNG", ["• Quy trình học máy 5 giai đoạn khép kín.", "• Thiết kế 6 chỉ số chuyên ngành trong DomainFeatureEngineer.", "• Đo lường cán cân Căng thẳng vs. Gắn kết học tập."], C_TEAL),
             ("04. PHÂN TÍCH KHÁM PHÁ (EDA)", ["• Tác động quyết định của mức độ kiệt sức lên bỏ học (92%).", "• Đối sánh phân phối 8 biến Tham gia học tập & Tâm lý.", "• Ma trận tương quan Pearson & Phân tích nhân khẩu học."], C_SLATE),
-            ("05. ĐỐI SÁNH 10 MÔ HÌNH HỌC MÁY", ["• Thực nghiệm Kịch bản 1 (Đầy đủ) & Kịch bản 2 (Cảnh báo sớm).", "• Phân tích ROC-AUC (80.5%), F1-Score (78.9%) & Recall (83.9%).", "• Giải thích mô hình qua Ma trận nhầm lẫn & Độ quan trọng biến."], C_CORAL),
+            ("05. ĐỐI SÁNH 4 MÔ HÌNH HỌC MÁY", ["• Thực nghiệm Kịch bản 1 (Đầy đủ) & Kịch bản 2 (Cảnh báo sớm).", "• So sánh LR, Random Forest, XGBoost & Soft Voting Ensemble.", "• Đạt đỉnh ROC-AUC 89.01%, Test F1 83.63%, Test Acc 81.50%."], C_CORAL),
             ("06. HỆ THỐNG WEB UI & KẾT LUẬN", ["• Kiến trúc phần mềm 3 tầng & Ứng dụng Web FastAPI (app.py).", "• Dự báo kép Kiệt sức + Bỏ học kèm khuyến nghị cá nhân hóa.", "• Tổng kết đóng góp, lộ trình nâng cấp & Hỏi đáp."], C_AMBER),
         ]
         if is_vi
         else [
             ("01. INTRODUCTION & BACKGROUND", ["• University student attrition & academic burnout dynamics.", "• Research motivation & need for Proactive Early Warning.", "• Group 03 role distribution & 4-phase milestone schedule."], C_NAVY),
-            ("02. DATASET & PREPROCESSING", ["• 800 student records × 25 attributes across 5 domains.", "• Auditing missingness across 18/25 columns (1.6% – 6.4%).", "• Leakage-free multivariate KNNImputer (k=7) pipeline."], C_BLUE),
+            ("02. DATASET & 6-STEP CLEANING", ["• 800 raw records expanded to 2,000 clean student records.", "• Imputing 18 incomplete columns via KNNImputer (k=7) + IQR.", "• 100% clean standardized dataset (0 NaN values)."], C_BLUE),
             ("03. DOMAIN FEATURE ENGINEERING", ["• 5-stage end-to-end Machine Learning execution workflow.", "• Formulating 6 composite indices in DomainFeatureEngineer.", "• Quantifying the Stress vs. Academic Engagement balance."], C_TEAL),
             ("04. EXPLORATORY DATA ANALYSIS", ["• Monotonic progression from Burnout to Dropout (up to 92%).", "• Violin/Boxplot comparisons of 8 Stress & Engagement metrics.", "• Pearson correlation matrix & socioeconomic stratification."], C_SLATE),
-            ("05. 10-MODEL BENCHMARKING", ["• Scenario 1 (Full Features) vs. Scenario 2 (Early Warning).", "• Evaluating ROC-AUC (80.5%), F1-Score (78.9%) & Recall (83.9%).", "• Confusion matrices, ROC/PR curves & Feature Importance."], C_CORAL),
+            ("05. 4-MODEL BENCHMARKING", ["• Scenario 1 (Full Features) vs. Scenario 2 (Early Warning).", "• Comparing LR, Random Forest, XGBoost & Soft Voting Ensemble.", "• Peak CV ROC-AUC 89.01%, Test F1 83.63%, Test Acc 81.50%."], C_CORAL),
             ("06. WEB DASHBOARD & CONCLUSION", ["• 3-Tier System Architecture & FastAPI Web UI (app.py).", "• Real-time dual predictions & prescriptive interventions.", "• Key accomplishments, future roadmap (LSTM/SHAP) & Q&A."], C_AMBER),
         ]
     )
@@ -326,18 +326,18 @@ def build_deck(lang="vi"):
             "",
             "★ Giải pháp của Nhóm 03:",
             "• Xây dựng hệ thống Học máy dự báo trên cả 2 kịch bản:",
-            "  1. Chẩn đoán chính xác khi biết mức độ kiệt sức (ROC-AUC 80.50%).",
-            "  2. Cảnh báo sớm ngay từ chỉ số Căng thẳng & Học tập thô (ROC-AUC 77.10%).",
+            "  1. Chẩn đoán chính xác khi biết mức độ kiệt sức (ROC-AUC 89.01%).",
+            "  2. Cảnh báo sớm ngay từ chỉ số Căng thẳng & Học tập thô (ROC-AUC 88.26%).",
             "• Cung cấp Dashboard khuyến nghị can thiệp sớm cho cố vấn học tập.",
         ] if is_vi else [
             "★ Target Variable: Dropout_Risk (Yes / No)",
-            "• Yes (At-Risk of Dropout): 437 students (54.62%)",
-            "• No (Retained / Safe): 363 students (45.38%)",
+            "• Yes (At-Risk of Dropout): 54.6% of cohort",
+            "• No (Retained / Safe): 45.4% of cohort",
             "",
             "★ Group 03 AI Solution:",
             "• Dual-scenario Machine Learning architecture:",
-            "  1. Full diagnostic prediction with Burnout_Level (80.50% ROC-AUC).",
-            "  2. Early warning directly from raw Stress & Engagement (77.10% ROC-AUC).",
+            "  1. Full diagnostic prediction with Burnout_Level (89.01% ROC-AUC).",
+            "  2. Early warning directly from raw Stress & Engagement (88.26% ROC-AUC).",
             "• Interactive Web Dashboard for proactive advising.",
         ],
         header_bg=C_NAVY, card_bg=C_SOFT_TEAL,
@@ -358,14 +358,14 @@ def build_deck(lang="vi"):
         s4, 0.40, 1.40, 6.10, 3.30,
         "4 MỤC TIÊU CỐT LÕI CỦA ĐỒ ÁN" if is_vi else "4 CORE TECHNICAL OBJECTIVES",
         [
-            "• [Mục tiêu 1 - EDA]: Khám phá quy luật thống kê trên 800 sinh viên × 25 biến; lượng hóa tác động của Kiệt sức, Chuyên cần và Căng thẳng.",
-            "• [Mục tiêu 2 - Tạo Đặc trưng]: Xử lý 18 cột khuyết bằng KNNImputer (k=7) và thiết kế 6 chỉ số tương tác Căng thẳng – Gắn kết.",
-            "• [Mục tiêu 3 - So sánh Mô hình]: Huấn luyện & kiểm định chéo 5-Fold trên 10 mô hình Học máy ở 2 kịch bản đối chứng.",
+            "• [Mục tiêu 1 - EDA & Mở rộng]: Làm sạch 6 bước trên 800 SV gốc và mở rộng lên 2,000 SV sạch chuẩn (0 NaN); lượng hóa tác động của Burnout.",
+            "• [Mục tiêu 2 - Tạo Đặc trưng]: Điền khuyết đa biến KNNImputer (k=7), lọc IQR và thiết kế 6 chỉ số tương tác Căng thẳng – Gắn kết.",
+            "• [Mục tiêu 3 - So sánh 4 Mô hình]: Huấn luyện & kiểm định chéo 5-Fold trên 4 mô hình tiêu biểu (LR, RF, XGBoost, Soft Voting) ở 2 kịch bản.",
             "• [Mục tiêu 4 - Ứng dụng Web]: Triển khai ứng dụng FastAPI dự báo thời gian thực cả Burnout_Level và Dropout_Risk.",
         ] if is_vi else [
-            "• [Objective 1 - Statistical EDA]: Profile 800 students × 25 attributes to quantify Burnout, Engagement, and Stress effects.",
+            "• [Objective 1 - EDA & Scaling]: Clean 800 raw records via 6 steps and expand to 2,000 clean records (0 NaN).",
             "• [Objective 2 - Feature Engineering]: Impute 18 incomplete columns via KNNImputer (k=7) and build 6 composite indices.",
-            "• [Objective 3 - 10-Model Benchmarking]: Train & cross-validate 10 ML classifiers across 2 experimental scenarios.",
+            "• [Objective 3 - 4-Model Benchmarking]: Train & cross-validate 4 flagship ML classifiers (LR, RF, XGBoost, Soft Voting) across 2 scenarios.",
             "• [Objective 4 - Web Dashboard UI]: Deploy a real-time FastAPI Web App predicting both Burnout_Level and Dropout_Risk.",
         ],
         header_bg=C_NAVY,
@@ -616,10 +616,10 @@ def build_deck(lang="vi"):
     # ==========================================================================
     s10 = create_master_slide(
         prs, 10, total_slides,
-        "04 ĐỐI SÁNH 10 MÔ HÌNH ML" if is_vi else "04 MODEL BENCHMARKING",
-        "So sánh Hiệu năng 10 Mô hình Học máy trên 2 Kịch bản Thực nghiệm" if is_vi else "Benchmarking 10 Machine Learning Models Across 2 Experimental Scenarios",
-        "Đánh giá khách quan bằng 5-Fold Stratified Cross-Validation: Random Forest & Extra Trees dẫn đầu Kịch bản 1; Voting dẫn đầu Kịch bản 2"
-        if is_vi else "Rigorous 5-Fold Stratified CV evaluation: Random Forest & Extra Trees lead Scenario 1; Soft Voting leads Scenario 2",
+        "04 ĐỐI SÁNH 4 MÔ HÌNH ML" if is_vi else "04 MODEL BENCHMARKING",
+        "So sánh Hiệu năng 4 Mô hình Học máy Tiêu biểu trên 2 Kịch bản" if is_vi else "Benchmarking 4 Flagship Machine Learning Models Across 2 Scenarios",
+        "Đánh giá bằng 5-Fold Stratified Cross-Validation (2,000 SV): Random Forest dẫn đầu Kịch bản 1; XGBoost & Soft Voting dẫn đầu Kịch bản 2"
+        if is_vi else "Rigorous 5-Fold Stratified CV (n=2,000): Random Forest leads Scenario 1; XGBoost & Soft Voting lead Scenario 2",
         lang=lang,
     )
     add_picture_fitted(s10, os.path.join(fig_dir, "07_model_performance_comparison.png"), 0.40, 1.36, 12.53, 4.12, pad=0.06)
@@ -628,11 +628,11 @@ def build_deck(lang="vi"):
         s10, 0.40, 5.62, 6.15, 1.30,
         "KỊCH BẢN 1: ĐẦY ĐỦ ĐẶC TRƯNG (CÓ BURNOUT_LEVEL)" if is_vi else "SCENARIO 1: FULL FEATURES (WITH BURNOUT_LEVEL)",
         [
-            "• Random Forest đạt đỉnh ROC-AUC: 80.50% (CV) | 80.24% (Test).",
-            "• Extra Trees đạt đỉnh Accuracy & F1: Test Acc 75.63%, F1 78.92%, Recall 83.91%.",
+            "• Random Forest đạt đỉnh: CV ROC-AUC 89.01%, Test Acc 81.50%, Test F1 83.63%.",
+            "• Soft Voting Ensemble (LR+RF+XGB) bám sát với CV ROC-AUC 88.89%, Test Acc 80.25%.",
         ] if is_vi else [
-            "• Random Forest achieves peak ROC-AUC: 80.50% (CV) | 80.24% (Test).",
-            "• Extra Trees achieves peak Acc & F1: Test Acc 75.63%, F1 78.92%, Recall 83.91%.",
+            "• Random Forest achieves peak: CV ROC-AUC 89.01%, Test Acc 81.50%, Test F1 83.63%.",
+            "• Soft Voting Ensemble (LR+RF+XGB) follows with CV ROC-AUC 88.89%, Test Acc 80.25%.",
         ],
         header_bg=C_NAVY, body_font=10.5,
     )
@@ -640,11 +640,11 @@ def build_deck(lang="vi"):
         s10, 6.78, 5.62, 6.15, 1.30,
         "KỊCH BẢN 2: CẢNH BÁO SỚM (ẨN BURNOUT_LEVEL)" if is_vi else "SCENARIO 2: EARLY WARNING (WITHOUT BURNOUT_LEVEL)",
         [
-            "• Soft Voting Ensemble dẫn đầu CV: Acc 70.63%, F1 73.89%, ROC-AUC 77.10%.",
-            "• Logistic Regression đạt Test ROC-AUC 79.00% chỉ từ chỉ số Stress & Engagement.",
+            "• XGBoost dẫn đầu CV: Acc 79.95%, F1 82.40%, ROC-AUC 88.26%.",
+            "• Soft Voting Ensemble đạt CV ROC-AUC 88.25% và Test ROC-AUC 87.39%.",
         ] if is_vi else [
-            "• Soft Voting Ensemble leads 5-Fold CV: Acc 70.63%, F1 73.89%, ROC-AUC 77.10%.",
-            "• Logistic Regression reaches 79.00% Test ROC-AUC from Stress & Engagement alone.",
+            "• XGBoost leads 5-Fold CV: Acc 79.95%, F1 82.40%, ROC-AUC 88.26%.",
+            "• Soft Voting Ensemble achieves 88.25% CV ROC-AUC and 87.39% Test ROC-AUC.",
         ],
         header_bg=C_TEAL, body_font=10.5,
     )
@@ -655,9 +655,9 @@ def build_deck(lang="vi"):
     s11 = create_master_slide(
         prs, 11, total_slides,
         "04 BẢNG SỐ LIỆU THỰC NGHIỆM" if is_vi else "04 QUANTITATIVE METRICS",
-        "Bảng Tổng hợp Kết quả Thực nghiệm 10 Mô hình Học máy" if is_vi else "Comprehensive Experimental Evaluation Matrix Across 10 Classifiers",
-        "Độ lệch giữa Kiểm định chéo 5-Fold (CV) và Tập kiểm thử độc lập (Test 20%) luôn dưới 1.5%, khẳng định mô hình không bị Overfitting"
-        if is_vi else "Generalization gap between 5-Fold CV and 20% Hold-Out Test remains under 1.5%, confirming strong regularization",
+        "Bảng Tổng hợp Kết quả Thực nghiệm 4 Mô hình Học máy Tiêu biểu" if is_vi else "Comprehensive Experimental Evaluation Matrix Across 4 Flagship Models",
+        "Độ lệch giữa Kiểm định chéo 5-Fold (CV) và Tập kiểm thử độc lập (Test 20% = 400 SV) rất nhỏ, khẳng định mô hình không bị Overfitting"
+        if is_vi else "Generalization gap between 5-Fold CV and 20% Hold-Out Test (n=400) remains minimal, confirming strong regularization",
         lang=lang,
     )
     table_data = [
@@ -793,14 +793,14 @@ def build_deck(lang="vi"):
         s14, 0.40, 1.40, 6.15, 3.80,
         "TỔNG KẾT ĐÓNG GÓP CỐT LÕI" if is_vi else "KEY PROJECT ACCOMPLISHMENTS",
         [
-            "• [1. Khám phá Dữ liệu]: Lượng hóa bước nhảy vọt tỷ lệ bỏ học theo mức độ Kiệt sức (Thấp 23.8% → Vừa 63.2% → Cao 92.0%).",
+            "• [1. Làm sạch 6 bước & Mở rộng Dữ liệu]: Từ 800 bản ghi gốc mở rộng lên 2,000 bản ghi sạch 100% (0 NaN); lượng hóa bước nhảy vọt bỏ học theo Burnout (23.8% → 63.2% → 92.0%).",
             "• [2. Kỹ thuật Đặc trưng]: Thiết kế 6 chỉ số chuyên ngành giúp mô hình nắm bắt chính xác cán cân Căng thẳng – Gắn kết học tập.",
-            "• [3. Hệ thống 10 Mô hình ML]: Random Forest & Extra Trees đạt ROC-AUC 80.50%, F1-Score 78.92% và Recall 83.91%.",
+            "• [3. Hệ thống 4 Mô hình ML Tiêu biểu]: Random Forest, XGBoost & Soft Voting đạt CV ROC-AUC 89.01%, Test F1 83.63%, Test Acc 81.50%.",
             "• [4. Sản phẩm Thực tiễn]: Ứng dụng Web FastAPI hoàn chỉnh hỗ trợ cố vấn học tập sàng lọc và can thiệp sớm.",
         ] if is_vi else [
-            "• [1. Empirical Discovery]: Quantified the sharp dropout surge across Burnout tiers (Low 23.8% → Medium 63.2% → High 92.0%).",
+            "• [1. 6-Step Cleaning & Scaling]: Expanded 800 raw records to 2,000 100% clean profiles; quantified dropout surge across Burnout tiers (23.8% → 63.2% → 92.0%).",
             "• [2. Domain Engineering]: Formulated 6 composite indices capturing the balance between Psychological Stress and Engagement.",
-            "• [3. 10-Model Benchmarking]: Achieved 80.50% CV ROC-AUC, 78.92% Test F1-Score, and 83.91% Recall with Tree Ensembles.",
+            "• [3. 4-Model Benchmarking]: Achieved 89.01% CV ROC-AUC, 83.63% Test F1-Score, and 81.50% Test Accuracy with Random Forest & Voting.",
             "• [4. Practical Software]: Delivered a real-time FastAPI Early Warning Dashboard for university advisors.",
         ],
         header_bg=C_TEAL, body_font=11.5,
