@@ -24,7 +24,9 @@ from src.train_and_compare_models import DomainFeatureEngineer, build_preprocess
 
 warnings.filterwarnings("ignore")
 
-DATA_PATH = os.path.join(BASE_DIR, "data", "student_burnout_dropout_dataset_2.csv")
+EXPANDED_PATH = os.path.join(BASE_DIR, "data", "student_burnout_dropout_expanded.csv")
+ORIG_PATH = os.path.join(BASE_DIR, "data", "student_burnout_dropout_dataset_2.csv")
+DATA_PATH = EXPANDED_PATH if os.path.exists(EXPANDED_PATH) else ORIG_PATH
 MODEL_DIR = os.path.join(BASE_DIR, "models")
 FIG_DIR = os.path.join(BASE_DIR, "figures")
 
@@ -41,10 +43,10 @@ def train_burnout_model():
         estimators=[
             ("lr", LogisticRegression(C=0.5, max_iter=1000, random_state=42)),
             ("rf", RandomForestClassifier(n_estimators=250, max_depth=8, min_samples_leaf=4, random_state=42)),
-            ("et", ExtraTreesClassifier(n_estimators=250, max_depth=8, min_samples_leaf=4, random_state=42)),
-            ("gb", GradientBoostingClassifier(n_estimators=120, learning_rate=0.04, max_depth=3, random_state=42)),
+            ("xgb", XGBClassifier(n_estimators=150, learning_rate=0.04, max_depth=3, random_state=42, eval_metric="mlogloss")),
         ],
         voting="soft",
+        weights=[1, 3, 2],
     )
 
     pipe = Pipeline(
@@ -71,11 +73,11 @@ def draw_workflow_and_system_diagrams():
     ax.axis("off")
 
     steps = [
-        ("1. Thu thập Dữ liệu\n(Data Acquisition)", "800 Sinh viên x 25 thuộc tính\nNhân khẩu học, Học tập,\nLối sống & Tâm lý", "#264653"),
-        ("2. Tiền xử lý & EDA\n(Preprocessing)", "Xử lý 18 cột khuyết (KNNImputer)\nMã hóa One-Hot / Ordinal\nChuẩn hóa StandardScaler", "#2a9d8f"),
+        ("1. Thu thập & Mở rộng\n(Data Acquisition)", "2,000 Sinh viên x 25 thuộc tính\nNhân khẩu học, Học tập,\nLối sống & Tâm lý", "#264653"),
+        ("2. Làm sạch 6 Bước\n(Data Cleaning)", "KNNImputer + Lọc ngoại lai IQR\nMã hóa One-Hot / Ordinal\nChuẩn hóa StandardScaler", "#2a9d8f"),
         ("3. Kỹ thuật Đặc trưng\n(Feature Engineering)", "Academic Engagement Index\nPsychological Stress Index\nStress-Engagement Ratio", "#457b9d"),
-        ("4. Huấn luyện Mô hình\n(Model Training)", "So sánh 10 thuật toán ML\n5-Fold Stratified CV\nTrên 2 kịch bản thực nghiệm", "#e76f51"),
-        ("5. Đánh giá & Triển khai\n(Evaluation & Web UI)", "ROC-AUC ~80.5% | F1 ~78.9%\nHệ thống Cảnh báo Sớm\nFastAPI Web Dashboard", "#e63946"),
+        ("4. Huấn luyện Mô hình\n(Model Training)", "So sánh 4 mô hình tiêu biểu:\nLR, RF, XGBoost, Soft Voting\n5-Fold Stratified CV", "#e76f51"),
+        ("5. Đánh giá & Triển khai\n(Evaluation & Web UI)", "ROC-AUC ~89.1% | F1 ~83.0%\nHệ thống Cảnh báo Sớm\nFastAPI Web Dashboard", "#e63946"),
     ]
 
     for i, (title, desc, color) in enumerate(steps):

@@ -53,7 +53,9 @@ plt.rcParams["axes.unicode_minus"] = False
 sns.set_theme(style="whitegrid")
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA_PATH = os.path.join(BASE_DIR, "data", "student_burnout_dropout_dataset_2.csv")
+EXPANDED_PATH = os.path.join(BASE_DIR, "data", "student_burnout_dropout_expanded.csv")
+ORIG_PATH = os.path.join(BASE_DIR, "data", "student_burnout_dropout_dataset_2.csv")
+DATA_PATH = EXPANDED_PATH if os.path.exists(EXPANDED_PATH) else ORIG_PATH
 FIG_DIR = os.path.join(BASE_DIR, "figures")
 MODEL_DIR = os.path.join(BASE_DIR, "models")
 REPORT_DIR = os.path.join(BASE_DIR, "reports")
@@ -177,9 +179,6 @@ def build_preprocessor(X_sample):
 
 def get_models(random_state=42):
     lr = LogisticRegression(C=0.5, max_iter=1000, random_state=random_state)
-    svm = CalibratedClassifierCV(SVC(C=1.2, kernel="rbf", gamma="scale", random_state=random_state), cv=3)
-    knn = KNeighborsClassifier(n_neighbors=17, weights="distance", p=2)
-    dt = DecisionTreeClassifier(max_depth=5, min_samples_leaf=15, random_state=random_state)
     rf = RandomForestClassifier(
         n_estimators=300,
         max_depth=8,
@@ -188,22 +187,6 @@ def get_models(random_state=42):
         max_features="sqrt",
         random_state=random_state,
         n_jobs=-1,
-    )
-    et = ExtraTreesClassifier(
-        n_estimators=300,
-        max_depth=9,
-        min_samples_split=8,
-        min_samples_leaf=4,
-        random_state=random_state,
-        n_jobs=-1,
-    )
-    gb = GradientBoostingClassifier(
-        n_estimators=150,
-        learning_rate=0.04,
-        max_depth=3,
-        subsample=0.85,
-        min_samples_leaf=10,
-        random_state=random_state,
     )
     xgb = XGBClassifier(
         n_estimators=200,
@@ -217,38 +200,20 @@ def get_models(random_state=42):
         eval_metric="logloss",
         n_jobs=-1,
     )
-    mlp = MLPClassifier(
-        hidden_layer_sizes=(64, 32),
-        activation="relu",
-        alpha=0.5,
-        learning_rate_init=0.003,
-        max_iter=600,
-        early_stopping=True,
-        random_state=random_state,
-    )
     voting = VotingClassifier(
         estimators=[
             ("lr", lr),
             ("rf", rf),
-            ("et", et),
-            ("gb", gb),
             ("xgb", xgb),
-            ("svm", svm),
         ],
         voting="soft",
-        weights=[2, 3, 2, 2, 2, 2],
+        weights=[1, 3, 2],
     )
 
     return {
         "Logistic Regression": lr,
-        "SVM (RBF Kernel)": svm,
-        "K-Nearest Neighbors": knn,
-        "Decision Tree": dt,
         "Random Forest": rf,
-        "Extra Trees": et,
-        "Gradient Boosting": gb,
         "XGBoost": xgb,
-        "MLP Neural Network": mlp,
         "Soft Voting Ensemble": voting,
     }
 
@@ -350,9 +315,9 @@ def plot_model_comparison(res_full, res_early):
 
     axes[0].set_yticks(y_pos)
     axes[0].set_yticklabels(df_plot["Model"], fontweight="bold")
-    axes[0].set_xlim(50, 90)
+    axes[0].set_xlim(50, 98)
     axes[0].set_xlabel("Điểm đánh giá 5-Fold Cross-Validation (%)", fontweight="bold")
-    axes[0].set_title("So sánh 10 Mô hình Học máy (Kịch bản 1: Đầy đủ đặc trưng)", fontsize=12, fontweight="bold")
+    axes[0].set_title("So sánh 4 Mô hình Học máy Tiêu biểu (Kịch bản 1: Đầy đủ đặc trưng)", fontsize=12, fontweight="bold")
     axes[0].legend(loc="lower right")
 
     # Plot 2: Comparison between Scenario 1 (With Burnout) vs Scenario 2 (Without Burnout)
@@ -390,7 +355,7 @@ def plot_model_comparison(res_full, res_early):
 
     axes[1].set_yticks(y_pos2)
     axes[1].set_yticklabels(merged["Model"], fontweight="bold")
-    axes[1].set_xlim(55, 90)
+    axes[1].set_xlim(55, 98)
     axes[1].set_xlabel("Điểm ROC-AUC trung bình 5-Fold CV (%)", fontweight="bold")
     axes[1].set_title("Đánh giá Vai trò của Biến trung gian Burnout_Level (ROC-AUC)", fontsize=12, fontweight="bold")
     axes[1].legend(loc="lower right", fontsize=9)
@@ -454,7 +419,8 @@ def plot_confusion_matrices(trained_pipelines):
         f1 = f1_score(y_test, y_pred)
         ax.set_title(f"{name}\nAcc: {acc*100:.1f}% | F1: {f1*100:.1f}%", fontsize=11, fontweight="bold")
 
-    plt.suptitle("Ma trận Nhầm lẫn (Confusion Matrix) của 4 Mô hình Tiêu biểu trên Tập Kiểm thử (n=160)", fontsize=13.5, fontweight="bold", y=1.05)
+    n_test = len(trained_pipelines[top_models[0]][1])
+    plt.suptitle(f"Ma trận Nhầm lẫn (Confusion Matrix) của 4 Mô hình Tiêu biểu trên Tập Kiểm thử (n={n_test})", fontsize=13.5, fontweight="bold", y=1.05)
     plt.tight_layout()
     plt.savefig(os.path.join(FIG_DIR, "09_confusion_matrices_top_models.png"), bbox_inches="tight")
     plt.close()

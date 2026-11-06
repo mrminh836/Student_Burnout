@@ -20,7 +20,9 @@ plt.rcParams["axes.unicode_minus"] = False
 sns.set_theme(style="whitegrid", palette="muted")
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA_PATH = os.path.join(BASE_DIR, "data", "student_burnout_dropout_dataset_2.csv")
+EXPANDED_PATH = os.path.join(BASE_DIR, "data", "student_burnout_dropout_expanded.csv")
+ORIG_PATH = os.path.join(BASE_DIR, "data", "student_burnout_dropout_dataset_2.csv")
+DATA_PATH = EXPANDED_PATH if os.path.exists(EXPANDED_PATH) else ORIG_PATH
 FIG_DIR = os.path.join(BASE_DIR, "figures")
 os.makedirs(FIG_DIR, exist_ok=True)
 
@@ -34,6 +36,9 @@ def load_data():
 
 def plot_missing_values(df):
     missing = df.isnull().sum()
+    if missing.sum() == 0 and os.path.exists(ORIG_PATH):
+        df = pd.read_csv(ORIG_PATH)
+        missing = df.isnull().sum()
     missing = missing[missing > 0].sort_values(ascending=True)
     missing_pct = (missing / len(df)) * 100
 
@@ -91,7 +96,7 @@ def plot_target_and_burnout(df):
             fontweight="bold",
             fontsize=10.5,
         )
-    axes[0].set_ylim(0, 520)
+    axes[0].set_ylim(0, max(counts_drop.values) * 1.18)
     axes[0].set_title("Phân phối Nguy cơ Bỏ học\n(Dropout_Risk Distribution)", fontsize=12, fontweight="bold")
     axes[0].set_ylabel("Số lượng sinh viên (Count)", fontweight="bold")
 
@@ -116,7 +121,7 @@ def plot_target_and_burnout(df):
             fontweight="bold",
             fontsize=10.5,
         )
-    axes[1].set_ylim(0, 380)
+    axes[1].set_ylim(0, max(counts_burn.values) * 1.18)
     axes[1].set_title("Phân phối Mức độ Kiệt sức\n(Burnout_Level Distribution)", fontsize=12, fontweight="bold")
     axes[1].set_ylabel("Số lượng sinh viên (Count)", fontweight="bold")
 

@@ -5,7 +5,9 @@
 ```text
 Sudent_burnout/
 ├── data/
-│   └── student_burnout_dropout_dataset_2.csv    # Bộ dữ liệu gốc (800 sinh viên x 25 thuộc tính)
+│   ├── student_burnout_dropout_dataset_2.csv           # Bộ dữ liệu gốc giữ nguyên (800 SV x 25 cột, có NaN)
+│   ├── student_burnout_dropout_expanded.csv            # Bộ dữ liệu mở rộng đã làm sạch 100% (2,000 SV x 25 cột, 0 NaN)
+│   └── student_burnout_dropout_expanded_cleaned.csv    # Bộ dữ liệu mở rộng + 6 chỉ số đặc trưng (2,000 SV x 34 cột, 0 NaN)
 ├── figures/                                     # 10 biểu đồ phân tích EDA & Đánh giá mô hình (200 DPI)
 │   ├── 01_missing_values_analysis.png
 │   ├── 02_target_and_burnout_distribution.png
@@ -21,20 +23,24 @@ Sudent_burnout/
 │   ├── best_dropout_model_full.pkl
 │   └── best_dropout_model_early_warning.pkl
 ├── reports/
-│   └── model_comparison_metrics.csv             # Bảng kết quả thực nghiệm 10 mô hình x 2 kịch bản
+│   └── model_comparison_metrics.csv                  # Bảng kết quả thực nghiệm 4 mô hình tiêu biểu x 2 kịch bản
 ├── src/
-│   ├── eda_analysis.py                          # Script phân tích khám phá dữ liệu & xuất biểu đồ EDA
-│   ├── train_and_compare_models.py              # Script Feature Engineering, huấn luyện & so sánh 10 mô hình
-│   └── build_notebook.py                        # Script tự động đóng gói Jupyter Notebook
-└── Student_Burnout_Dropout_Prediction_Nhom03.ipynb  # Jupyter Notebook trình bày toàn bộ quy trình
+│   ├── generate_expanded_dataset.py                  # Script làm sạch 6 bước & mở rộng dữ liệu lên 2,000 SV
+│   ├── eda_analysis.py                               # Script phân tích khám phá dữ liệu & xuất biểu đồ EDA
+│   ├── train_and_compare_models.py                   # Script Feature Engineering, huấn luyện & so sánh 4 mô hình mạnh nhất
+│   └── build_notebook.py                             # Script tự động đóng gói Jupyter Notebook
+└── Student_Burnout_Dropout_Prediction_Nhom03.ipynb   # Jupyter Notebook trình bày toàn bộ quy trình
 ```
 
 ## 2. Hướng dẫn Chạy Chương trình (How to Run)
 ```bash
+# 0. Làm sạch 6 bước và tạo bộ dữ liệu mở rộng (2,000 sinh viên, 0 NaN) từ bộ dữ liệu gốc
+python src/generate_expanded_dataset.py
+
 # 1. Chạy phân tích EDA và xuất 6 biểu đồ khám phá dữ liệu
 python src/eda_analysis.py
 
-# 2. Huấn luyện, kiểm định chéo 5-Fold và so sánh 10 mô hình học máy trên 2 kịch bản
+# 2. Huấn luyện, kiểm định chéo 5-Fold và so sánh 4 mô hình mạnh nhất (LR, RF, XGBoost, Soft Voting)
 python src/train_and_compare_models.py
 
 # 3. Huấn luyện mô hình dự báo 3 mức độ Burnout và xuất sơ đồ kiến trúc hệ thống
