@@ -36,4 +36,10 @@ python src/eda_analysis.py
 
 # 2. Huấn luyện, kiểm định chéo 5-Fold và so sánh 10 mô hình học máy trên 2 kịch bản
 python src/train_and_compare_models.py
+
+# 3. Huấn luyện mô hình dự báo 3 mức độ Burnout và xuất sơ đồ kiến trúc hệ thống
+python src/train_burnout_and_diagrams.py
+
+# 4. Khởi chạy ứng dụng Web Dashboard (FastAPI) tại http://localhost:8000
+python app.py
 ```
